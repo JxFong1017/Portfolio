@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { Geist } from "next/font/google";
-import { FiMail, FiLinkedin, FiGithub } from 'react-icons/fi'; 
+import { FiMail, FiLinkedin, FiGithub, FiSend, FiCheck, FiX } from 'react-icons/fi'; 
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -11,6 +12,62 @@ export default function ContactPage() {
   const yourEmail = "your.email@example.com"; // Replace with your actual email
   const yourLinkedIn = "#"; // Replace with your LinkedIn URL
   const yourGitHub = "#"; // Replace with your GitHub URL
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error' | null
+  const [statusMessage, setStatusMessage] = useState('');
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+    setStatusMessage('');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSubmitStatus('success');
+        setStatusMessage(data.message);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        setSubmitStatus('error');
+        setStatusMessage(data.message);
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+      setStatusMessage('Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const resetStatus = () => {
+    setSubmitStatus(null);
+    setStatusMessage('');
+  };
 
   return (
     <div className={`flex flex-col min-h-screen bg-gray-50 ${geistSans.className}`}>
@@ -73,20 +130,127 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* Placeholder for a Contact Form or other info */}
+            {/* Contact Form */}
             <div className="mt-12 pt-8 border-t border-gray-200">
-              <h3 className="text-2xl font-semibold text-gray-800 mb-4 text-center">Or Send a Direct Message</h3>
+              <h3 className="text-2xl font-semibold text-gray-800 mb-4 text-center">Send a Direct Message</h3>
               <p className="text-gray-600 text-center mb-6">
-                (Placeholder for a contact form integration or further contact instructions)
+                Have a question or want to work together? Send me a message!
               </p>
-              <div className="text-center">
-                <button 
-                  disabled 
-                  className="bg-gray-300 text-gray-500 font-semibold py-3 px-8 rounded-md cursor-not-allowed"
-                >
-                  Contact Form (Coming Soon)
-                </button>
-              </div>
+              
+              {/* Status Message */}
+              {submitStatus && (
+                <div className={`mb-6 p-4 rounded-lg flex items-center justify-between ${
+                  submitStatus === 'success' 
+                    ? 'bg-green-50 border border-green-200 text-green-800' 
+                    : 'bg-red-50 border border-red-200 text-red-800'
+                }`}>
+                  <div className="flex items-center">
+                    {submitStatus === 'success' ? (
+                      <FiCheck className="mr-2 text-green-600" />
+                    ) : (
+                      <FiX className="mr-2 text-red-600" />
+                    )}
+                    <span>{statusMessage}</span>
+                  </div>
+                  <button 
+                    onClick={resetStatus}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    <FiX />
+                  </button>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                      Name *
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors duration-200"
+                      placeholder="Your name"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                      Email *
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors duration-200"
+                      placeholder="your.email@example.com"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+                    Subject *
+                  </label>
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors duration-200"
+                    placeholder="What's this about?"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                    Message *
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    required
+                    rows={6}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors duration-200 resize-none"
+                    placeholder="Tell me about your project, question, or opportunity..."
+                  />
+                </div>
+                
+                <div className="text-center">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className={`inline-flex items-center px-8 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 ${
+                      isSubmitting
+                        ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                        : 'bg-purple-600 hover:bg-purple-700 text-white shadow-lg hover:shadow-xl'
+                    }`}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <FiSend className="mr-2" />
+                        Send Message
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
