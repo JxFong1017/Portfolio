@@ -1,4 +1,5 @@
-import nodemailer from 'nodemailer';
+// Use dynamic import so the module is only loaded on the server at runtime
+// This avoids bundling issues and "module not found" during build
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -6,6 +7,7 @@ export default async function handler(req, res) {
   }
 
   try {
+    const { default: nodemailer } = await import('nodemailer');
     const { name, email, subject, message } = req.body;
 
     // Validate required fields
@@ -25,8 +27,8 @@ export default async function handler(req, res) {
       });
     }
 
-    // Create transporter (you'll need to configure this with your email service)
-    const transporter = nodemailer.createTransporter({
+    // Create transporter (configure with your email service)
+    const transporter = nodemailer.createTransport({
       service: 'gmail', // or your email service
       auth: {
         user: process.env.EMAIL_USER, // your email

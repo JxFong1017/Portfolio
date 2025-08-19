@@ -30,7 +30,7 @@ const achievementsData = [
 
 export default function AchievementsPage() {
   const [selectedAchievement, setSelectedAchievement] = useState(null);
-  const yourName = "Derek";
+  const yourName = "Fong Jia Xin";
 
   const handleCardClick = (achievement) => {
     if (selectedAchievement && selectedAchievement.id === achievement.id) {

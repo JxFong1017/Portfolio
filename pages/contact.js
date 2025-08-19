@@ -8,10 +8,10 @@ const geistSans = Geist({
 });
 
 export default function ContactPage() {
-  const yourName = "Derek"; // Consistent with other pages
+  const yourName = "Fong Jia Xin"; // Consistent with other pages
   const yourEmail = "your.email@example.com"; // Replace with your actual email
-  const yourLinkedIn = "#"; // Replace with your LinkedIn URL
-  const yourGitHub = "#"; // Replace with your GitHub URL
+  const yourLinkedIn = "https://www.linkedin.com/in/jiaxin1017/"; // Replace with your LinkedIn URL
+  const yourGitHub = "https://github.com/JxFong1017"; // Replace with your GitHub URL
 
   const [formData, setFormData] = useState({
     name: '',

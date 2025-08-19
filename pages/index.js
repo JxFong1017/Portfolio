@@ -7,25 +7,25 @@ const geistSans = Geist({
 });
 
 export default function SIndexPage() {
-  const yourName = "Derek"; 
+  const yourName = "Fong Jia Xin"; 
   const yourProfession = "Full Stack Software Developer";
   const introParagraph = `A passionate ${yourProfession} 🚀 having an experience of building Web and Mobile applications with JavaScript / React.js / Node.js / React Native and some other cool libraries and frameworks.`;
 
   const socialLinks = [
     {
       name: 'GitHub',
-      url: '#',
+      url: 'https://github.com/JxFong1017',
       iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Octicons-mark-github.svg/2048px-Octicons-mark-github.svg.png',
     },
     {
       name: 'LinkedIn',
-      url: '#',
+      url: 'https://www.linkedin.com/in/jiaxin1017/',
       iconUrl: 'https://static.vecteezy.com/system/resources/previews/018/930/480/non_2x/linkedin-logo-linkedin-icon-transparent-free-png.png',
     },
     {
-      name: 'Twitter',
-      url: '#',
-      iconUrl: 'https://cdn.freebiesupply.com/logos/large/2x/twitter-3-logo-png-transparent.png',
+      name: 'Instagram',
+      url: 'https://www.instagram.com/jiaxin.1017/',
+      iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png',
     },
   ];
 

@@ -2,7 +2,7 @@ import "@/styles/globals.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-const SITE_NAME = "Derek";
+const SITE_NAME = "Fong Jia Xin";
 
 export default function App({ Component, pageProps }) {
   return (
