@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Geist } from "next/font/google";
+import Header from '../components/Header';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,6 +43,7 @@ export default function AchievementsPage() {
 
   return (
     <div className={`flex flex-col min-h-screen bg-gray-50 ${geistSans.className}`}>
+      <Header name={yourName} />
       <main className="flex-grow container mx-auto px-6 py-12 pt-24 md:pt-32">
         <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-10 text-center">
           My Achievements

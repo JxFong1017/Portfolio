@@ -1,5 +1,6 @@
 import { Geist } from "next/font/google";
 import Image from 'next/image';
+import Header from '../components/Header';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,7 @@ export default function SIndexPage() {
 
   return (
     <div className={`flex flex-col min-h-screen bg-white ${geistSans.className}`}>
+      <Header name={yourName} />
       <main className="flex-grow container mx-auto px-6 pt-24 md:pt-32 pb-12 flex items-center">
         <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center w-full">
           <div className="text-left">
@@ -62,7 +64,7 @@ export default function SIndexPage() {
               ))}
             </div>
 
-            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-12">
               <a 
                 href="/resume.pdf"
                 target="_blank"
@@ -78,12 +80,24 @@ export default function SIndexPage() {
                 Contact Me
               </a>
             </div>
+
+            {/* Skills Section */}
+            <div className="mb-8">
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">Technical Skills</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {['JavaScript', 'React.js', 'Node.js', 'Next.js', 'MongoDB', 'PostgreSQL', 'Tailwind CSS', 'Git'].map((skill) => (
+                  <div key={skill} className="bg-purple-50 text-purple-700 px-3 py-2 rounded-lg text-sm font-medium text-center hover:bg-purple-100 transition-colors duration-200">
+                    {skill}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="hidden md:flex justify-center items-center">
             <div className="w-full max-w-md h-auto bg-gray-100 rounded-lg border border-gray-200 shadow-sm overflow-hidden">
               <Image 
-                src="/myimage.png" 
+                src="/myimage.jpg" 
                 alt="Portfolio Illustration" 
                 width={600} 
                 height={700} 
@@ -93,6 +107,32 @@ export default function SIndexPage() {
           </div>
         </div>
       </main>
+
+      {/* Call to Action Section */}
+      <section className="bg-gradient-to-r from-purple-600 to-blue-600 py-16">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Ready to work together?
+          </h2>
+          <p className="text-xl text-purple-100 mb-8 max-w-2xl mx-auto">
+            I'm always excited to take on new challenges and collaborate on interesting projects. Let's discuss how we can bring your ideas to life!
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a 
+              href="/projects"
+              className="bg-white text-purple-600 hover:bg-purple-50 font-semibold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              View My Work
+            </a>
+            <a 
+              href="/contact"
+              className="bg-transparent text-white hover:bg-white/10 font-semibold py-3 px-8 rounded-lg border-2 border-white transition-all duration-300 hover:scale-105"
+            >
+              Get In Touch
+            </a>
+          </div>
+        </div>
+      </section>
     </div>
   );
 } 
