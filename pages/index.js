@@ -1,49 +1,88 @@
 import { Geist } from "next/font/google";
 import Image from 'next/image';
-import Header from '../components/Header';
+import { useTheme } from '../contexts/ThemeContext';
+import TypewriterText from '../components/TypewriterText';
+import { FiArrowDown, FiGithub, FiLinkedin, FiInstagram, FiDownload, FiMail } from 'react-icons/fi';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
-export default function SIndexPage() {
+export default function IndexPage() {
+  const { isDark } = useTheme();
   const yourName = "Fong Jia Xin"; 
   const yourProfession = "Full Stack Software Developer";
+  
+  const typewriterTexts = [
+    "Full Stack Developer",
+    "React Specialist", 
+    "Node.js Developer",
+    "Mobile App Developer",
+    "Problem Solver",
+    "Creative Thinker"
+  ];
+
   const introParagraph = `A passionate ${yourProfession} 🚀 having an experience of building Web and Mobile applications with JavaScript / React.js / Node.js / React Native and some other cool libraries and frameworks.`;
 
   const socialLinks = [
     {
       name: 'GitHub',
       url: 'https://github.com/JxFong1017',
-      iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Octicons-mark-github.svg/2048px-Octicons-mark-github.svg.png',
+      icon: FiGithub,
+      color: 'hover:text-gray-900 dark:hover:text-white',
+      bgColor: 'hover:bg-gray-100 dark:hover:bg-gray-800'
     },
     {
       name: 'LinkedIn',
       url: 'https://www.linkedin.com/in/jiaxin1017/',
-      iconUrl: 'https://static.vecteezy.com/system/resources/previews/018/930/480/non_2x/linkedin-logo-linkedin-icon-transparent-free-png.png',
+      icon: FiLinkedin,
+      color: 'hover:text-blue-600 dark:hover:text-blue-400',
+      bgColor: 'hover:bg-blue-50 dark:hover:bg-blue-900/20'
     },
     {
       name: 'Instagram',
       url: 'https://www.instagram.com/jiaxin.1017/',
-      iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png',
+      icon: FiInstagram,
+      color: 'hover:text-pink-600 dark:hover:text-pink-400',
+      bgColor: 'hover:bg-pink-50 dark:hover:bg-pink-900/20'
     },
   ];
 
-
   return (
-    <div className={`flex flex-col min-h-screen bg-white ${geistSans.className}`}>
-      <Header name={yourName} />
-      <main className="flex-grow container mx-auto px-6 pt-24 md:pt-32 pb-12 flex items-center">
+    <div className={`flex-1 transition-colors duration-500 ${
+      isDark ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'
+    } ${geistSans.className}`}>
+      <main className="container mx-auto px-6 pt-24 md:pt-32 pb-12 flex items-center min-h-screen">
         <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center w-full">
           <div className="text-left">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-              Hi all <span role="img" aria-label="waving hand">👋</span> I'm <span className="text-purple-600">{yourName}</span>
-            </h1>
-            <p className="text-lg text-gray-700 mb-8 leading-relaxed">
+            {/* Animated greeting */}
+            <div className="mb-6">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-2">
+                <span className="inline-block animate-bounce">👋</span> Hi all, I'm{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400">
+                  {yourName}
+                </span>
+              </h1>
+            </div>
+
+            {/* Typewriter effect */}
+            <div className="mb-6">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-700 dark:text-gray-300">
+                I'm a{' '}
+                <TypewriterText 
+                  texts={typewriterTexts} 
+                  speed={100} 
+                  delay={2000} 
+                />
+              </h2>
+            </div>
+
+            <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
               {introParagraph}
             </p>
             
+            {/* Enhanced social links */}
             <div className="flex space-x-4 mb-10">
               {socialLinks.map(social => (
                 <a 
@@ -52,87 +91,61 @@ export default function SIndexPage() {
                   target="_blank" 
                   rel="noopener noreferrer" 
                   aria-label={social.name}
-                  className="text-gray-500 hover:text-purple-600 transition-colors duration-300 bg-gray-100 hover:bg-purple-50 rounded-full flex items-center justify-center w-10 h-10 md:w-12 md:h-12 relative overflow-hidden"
+                  className={`text-gray-500 dark:text-gray-400 ${social.color} transition-all duration-300 ${social.bgColor} rounded-full flex items-center justify-center w-12 h-12 relative overflow-hidden transform hover:scale-110 hover:rotate-3`}
                 >
-                  <Image 
-                    src={social.iconUrl} 
-                    alt={`${social.name} logo`} 
-                    layout="fill"
-                    className={`object-contain ${social.name === 'LinkedIn' ? 'transform scale-150' : ''}`}
-                  />
+                  <social.icon className="w-6 h-6" />
                 </a>
               ))}
             </div>
 
-            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-12">
+            {/* Enhanced CTA buttons */}
+            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
               <a 
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto text-center bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-10 rounded-md transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+                className="group w-full sm:w-auto text-center bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 px-10 rounded-md transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 flex items-center justify-center"
               >
+                <FiDownload className="mr-2 group-hover:animate-bounce" />
                 Resume
               </a>
               <a 
                 href="/contact"
-                className="w-full sm:w-auto text-center bg-transparent hover:bg-purple-50 text-purple-600 font-semibold py-3 px-10 rounded-md border-2 border-purple-600 transition-all duration-300 shadow-sm hover:shadow-md transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+                className="group w-full sm:w-auto text-center bg-transparent hover:bg-purple-50 dark:hover:bg-purple-900/20 text-purple-600 dark:text-purple-400 font-semibold py-3 px-10 rounded-md border-2 border-purple-600 dark:border-purple-400 transition-all duration-300 shadow-sm hover:shadow-md transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 flex items-center justify-center"
               >
+                <FiMail className="mr-2 group-hover:animate-pulse" />
                 Contact Me
               </a>
             </div>
 
-            {/* Skills Section */}
-            <div className="mb-8">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">Technical Skills</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {['JavaScript', 'React.js', 'Node.js', 'Next.js', 'MongoDB', 'PostgreSQL', 'Tailwind CSS', 'Git'].map((skill) => (
-                  <div key={skill} className="bg-purple-50 text-purple-700 px-3 py-2 rounded-lg text-sm font-medium text-center hover:bg-purple-100 transition-colors duration-200">
-                    {skill}
-                  </div>
-                ))}
-              </div>
+            {/* Scroll indicator */}
+            <div className="mt-16 text-center animate-bounce">
+              <FiArrowDown className="w-6 h-6 text-gray-400 dark:text-gray-600 mx-auto" />
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Scroll to explore more</p>
             </div>
           </div>
 
+          {/* Enhanced image section */}
           <div className="hidden md:flex justify-center items-center">
-            <div className="w-full max-w-md h-auto bg-gray-100 rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-              <Image 
-                src="/myimage.jpg" 
-                alt="Portfolio Illustration" 
-                width={600} 
-                height={700} 
-                className="object-cover w-full h-full"
-              />
+            <div className="relative group">
+              {/* Floating elements */}
+              <div className="absolute -top-4 -right-4 w-8 h-8 bg-purple-500 rounded-full opacity-75 animate-pulse"></div>
+              <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-pink-500 rounded-full opacity-75 animate-ping"></div>
+              <div className="absolute top-1/2 -right-8 w-4 h-4 bg-blue-500 rounded-full opacity-75 animate-bounce"></div>
+              
+              <div className="w-full max-w-md h-auto bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-2xl border border-purple-200 dark:border-purple-700 shadow-2xl overflow-hidden transform transition-all duration-500 group-hover:scale-105 group-hover:rotate-1">
+                <Image 
+                  src="/myimage.jpg" 
+                  alt="Portfolio Illustration" 
+                  width={600} 
+                  height={700} 
+                  className="object-cover w-full h-full"
+                />
+              </div>
             </div>
           </div>
         </div>
       </main>
-
-      {/* Call to Action Section */}
-      <section className="bg-gradient-to-r from-purple-600 to-blue-600 py-16">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Ready to work together?
-          </h2>
-          <p className="text-xl text-purple-100 mb-8 max-w-2xl mx-auto">
-            I'm always excited to take on new challenges and collaborate on interesting projects. Let's discuss how we can bring your ideas to life!
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
-              href="/projects"
-              className="bg-white text-purple-600 hover:bg-purple-50 font-semibold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-            >
-              View My Work
-            </a>
-            <a 
-              href="/contact"
-              className="bg-transparent text-white hover:bg-white/10 font-semibold py-3 px-8 rounded-lg border-2 border-white transition-all duration-300 hover:scale-105"
-            >
-              Get In Touch
-            </a>
-          </div>
-        </div>
-      </section>
     </div>
   );
 } 
