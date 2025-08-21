@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { useTheme } from '../contexts/ThemeContext';
 import ThemeToggle from './ThemeToggle';
 import { FiMenu, FiX } from 'react-icons/fi';
@@ -7,11 +6,24 @@ import { FiMenu, FiX } from 'react-icons/fi';
 export default function Header({ name }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
   const { isDark } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
+      
+      // Update active section based on scroll position
+      const sections = ['home', 'skills', 'projects', 'ads', 'contact'];
+      const scrollPosition = window.scrollY + 100; // Offset for header height
+      
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = document.getElementById(sections[i]);
+        if (section && scrollPosition >= section.offsetTop) {
+          setActiveSection(sections[i]);
+          break;
+        }
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -19,17 +31,28 @@ export default function Header({ name }) {
   }, []);
 
   const navLinks = [
-    { href: '/', label: 'Home' },
-    { href: '/skills', label: 'Skills' },
-    { href: '/projects', label: 'Projects' },
-    { href: '/achievements', label: 'Achievements' },
-    { href: '/contact', label: 'Contact' },
+    { href: '#home', label: 'Home', id: 'home' },
+    { href: '#skills', label: 'Skills', id: 'skills' },
+    { href: '#projects', label: 'Projects', id: 'projects' },
+    { href: '#ads', label: 'Advertisements', id: 'ads' },
+    { href: '#contact', label: 'Contact', id: 'contact' },
   ];
 
   const smoothScrollTo = (href) => {
-    if (href === '/') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    const targetId = href.replace('#', '');
+    const targetSection = document.getElementById(targetId);
+    
+    if (targetSection) {
+      // Update URL hash
+      window.location.hash = href;
+      
+      // Smooth scroll to target section
+      targetSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
     }
+    
     setIsMobileMenuOpen(false);
   };
 
@@ -41,21 +64,30 @@ export default function Header({ name }) {
     }`}>
       <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
-        <Link href="/" legacyBehavior>
-          <a className="text-2xl font-bold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors duration-300">
-            &lt; {name} /&gt;
-          </a>
-        </Link>
+        <a 
+          href="#home" 
+          onClick={(e) => { e.preventDefault(); smoothScrollTo('#home'); }}
+          className="text-2xl font-bold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors duration-300 cursor-pointer"
+        >
+          &lt; {name} /&gt;
+        </a>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-8">
           {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} legacyBehavior>
-              <a className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300 font-medium relative group">
-                {link.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-600 dark:bg-purple-400 transition-all duration-300 group-hover:w-full"></span>
-              </a>
-            </Link>
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={(e) => { e.preventDefault(); smoothScrollTo(link.href); }}
+              className={`text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300 font-medium relative group cursor-pointer ${
+                activeSection === link.id ? 'text-purple-600 dark:text-purple-400' : ''
+              }`}
+            >
+              {link.label}
+              <span className={`absolute -bottom-1 left-0 h-0.5 bg-purple-600 dark:bg-purple-400 transition-all duration-300 ${
+                activeSection === link.id ? 'w-full' : 'w-0 group-hover:w-full'
+              }`}></span>
+            </a>
           ))}
           
           {/* Theme Toggle */}
@@ -83,14 +115,16 @@ export default function Header({ name }) {
       }`}>
         <div className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 px-6 py-4 space-y-4">
           {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} legacyBehavior>
-              <a 
-                onClick={() => smoothScrollTo(link.href)}
-                className="block text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300 font-medium py-2 border-b border-gray-100 dark:border-gray-800"
-              >
-                {link.label}
-              </a>
-            </Link>
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={(e) => { e.preventDefault(); smoothScrollTo(link.href); }}
+              className={`block text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300 font-medium py-2 border-b border-gray-100 dark:border-gray-800 cursor-pointer ${
+                activeSection === link.id ? 'text-purple-600 dark:text-purple-400' : ''
+              }`}
+            >
+              {link.label}
+            </a>
           ))}
         </div>
       </div>
